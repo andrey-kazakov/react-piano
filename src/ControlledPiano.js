@@ -98,7 +98,7 @@ class ControlledPiano extends React.Component {
 
   onKeyDown = (event) => {
     // Don't conflict with existing combinations like ctrl + t
-    if (event.ctrlKey || event.metaKey || event.shiftKey) {
+    if (event.ctrlKey || event.metaKey) {
       return;
     }
     const midiNumber = this.getMidiNumberForKey(event.key);
