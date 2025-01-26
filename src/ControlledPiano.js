@@ -80,11 +80,11 @@ class ControlledPiano extends React.Component {
     });
   };
 
-  getMidiNumberForCode = (code) => {
+  getMidiNumberForCode = (code, shiftKey) => {
     if (!this.props.keyboardShortcuts) {
       return null;
     }
-    const shortcut = this.props.keyboardShortcuts.find((sh) => sh.code === code);
+    const shortcut = this.props.keyboardShortcuts.find((sh) => sh.code === code && sh.shiftKey === shiftKey);
     return shortcut && shortcut.midiNumber;
   };
 
@@ -98,10 +98,10 @@ class ControlledPiano extends React.Component {
 
   onKeyDown = (event) => {
     // Don't conflict with existing combinations like ctrl + t
-    if (event.ctrlKey || event.metaKey) {
+    if (event.ctrlKey || event.metaKey || event.repeat) {
       return;
     }
-    const midiNumber = this.getMidiNumberForCode(event.code);
+    const midiNumber = this.getMidiNumberForCode(event.code, event.shiftKey);
     if (midiNumber) {
       this.onPlayNoteInput(midiNumber);
     }
@@ -113,9 +113,14 @@ class ControlledPiano extends React.Component {
     // ctrlKey is fired unexpectedly, which would cause onStopNote to NOT be fired, which causes problematic
     // lingering notes. Since it's fairly safe to call onStopNote even when not necessary,
     // the ctrl/meta/shift check is removed to fix that issue.
-    const midiNumber = this.getMidiNumberForCode(event.code);
+    const midiNumber = this.getMidiNumberForCode(event.code, false);
     if (midiNumber) {
       this.onStopNoteInput(midiNumber);
+    }
+
+    const midiNumberWithShift = this.getMidiNumberForCode(event.code, true);
+    if (midiNumberWithShift) {
+      this.onStopNoteInput(midiNumberWithShift);
     }
   };
 

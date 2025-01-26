@@ -1,6 +1,6 @@
 import MidiNumbers from './MidiNumbers';
 
-function createKeyboardShortcuts({ firstNote, lastNote, keyboardConfig }) {
+function createKeyboardShortcuts({ firstNote, lastNote, keyboardConfig, flatsNeedShiftKey }) {
   let currentMidiNumber = firstNote;
   let naturalKeyIndex = 0;
   let keyboardShortcuts = [];
@@ -17,12 +17,14 @@ function createKeyboardShortcuts({ firstNote, lastNote, keyboardConfig }) {
       keyboardShortcuts.push({
         key: key.flat.key,
         code: key.flat.code,
+        shiftKey: !!flatsNeedShiftKey,
         midiNumber: currentMidiNumber,
       });
     } else {
       keyboardShortcuts.push({
         key: key.natural.key,
         code: key.natural.code,
+        shiftKey: false,
         midiNumber: currentMidiNumber,
       });
       naturalKeyIndex += 1;
